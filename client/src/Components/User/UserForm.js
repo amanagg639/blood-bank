@@ -22,7 +22,7 @@ const UserForm = () => {
     const [me, setMe] = useState(false);
     const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     useEffect(() => {
-        if (handle == "donate") {
+        if (handle === "donate") {
             setMe(true);
         }
     }, []);
@@ -70,13 +70,13 @@ const UserForm = () => {
             <form
                 className="space-y-7"
                 action=""
-                onSubmit={(e) => { e.preventDefault(); if (bank == "") { alert("Select a blood bank"); return; } handle == "donate" ? donate() : request(); }}
+                onSubmit={(e) => { e.preventDefault(); if (bank === "") { alert("Select a blood bank"); return; } handle === "donate" ? donate() : request(); }}
             >
                 <fieldset className="border border-solid border-gray-300 p-3">
                     <legend class="text-2xl font-bold">
                         &nbsp;{handle === "donate" ? "Donate Blood" : "Make Blood Request"} &nbsp;
                     </legend>
-                    {handle == "request" && <legend align="right">
+                    {handle === "request" && <legend align="right">
                         <input type="checkbox" id="me" value={me} onChange={(e) => setMe(!me)} />
                         <label for="me"> For me</label><br />
                     </legend>}
@@ -84,14 +84,14 @@ const UserForm = () => {
                     <table className="w-full" cellPadding={10}>
                         <tr>
                             <td>
-                                <label className="font-semibold leading-8">{handle == "request" && "Patient "}Name:<font color="red">*</font></label>
+                                <label className="font-semibold leading-8">{handle === "request" && "Patient "}Name:<font color="red">*</font></label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     type="text"
                                     placeholder="Enter your full name"
                                     required
                                     value={name}
-                                    disabled={me || handle == "donate"}
+                                    disabled={me || handle === "donate"}
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </td>
@@ -99,7 +99,7 @@ const UserForm = () => {
                                 <label for="blood" className="font-semibold  leading-8">Blood Group:<font color="red">*</font></label>
                                 <select name="blood"
                                     onChange={(e) => setBlood(e.target.value)}
-                                    disabled={me || handle == "donate"}
+                                    disabled={me || handle === "donate"}
                                     className="w-full p-3 text-md border border-silver rounded">
                                     {
                                         bloodGroups.map((e, i) => <option value={i} selected={blood === i}>{e}</option>)
@@ -108,7 +108,7 @@ const UserForm = () => {
                             </td>
                         </tr>
                         <tr>
-                            {handle == "request" && <><td>
+                            {handle === "request" && <><td>
                                 <label className="font-semibold  leading-8">Age:<font color="red">*</font></label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
@@ -141,7 +141,7 @@ const UserForm = () => {
                                 onChange={(e) => setUnits(e.target.value)}
                             />
                         </td><td colSpan={2}>
-                                <label for="desc" className="font-semibold  leading-8">{handle == "donate" ? "Disease (if any):" : "Reason:"}</label>
+                                <label for="desc" className="font-semibold  leading-8">{handle === "donate" ? "Disease (if any):" : "Reason:"}</label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     name="desc"
