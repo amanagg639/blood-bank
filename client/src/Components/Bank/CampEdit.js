@@ -1,5 +1,4 @@
-import React, { useState, useContext } from 'react'
-import AuthContext from '../context/AuthContext'
+import React, { useState } from 'react'
 import Popup from '../Util/Popup';
 import CampsCheck from './CampsCheck';
 
