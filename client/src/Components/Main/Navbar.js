@@ -1,4 +1,4 @@
-import React, { useState, useNavbarEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import logo from "../../assets/logo.png";
 import { Outlet, Link } from "react-router-dom";
 import DropDown from "../Util/DropDown";
@@ -18,7 +18,7 @@ const Navbar = (props) => {
         }
         t = localStorage.getItem("theme");
         setTheme(t);
-        if (t == 1) {
+        if (t === 1) {
             doc.add("dark");
         }
     }, []);
@@ -73,10 +73,10 @@ const Navbar = (props) => {
                                 onClick={() => {
                                     localStorage.setItem(
                                         "theme",
-                                        localStorage.getItem("theme") == 1 ? 0 : 1
+                                        localStorage.getItem("theme") === 1 ? 0 : 1
                                     );
                                     setTheme(localStorage.getItem("theme"));
-                                    if (theme == 0) {
+                                    if (theme === 0) {
                                         doc.add("dark");
                                     } else {
                                         doc.remove("dark");
@@ -84,7 +84,7 @@ const Navbar = (props) => {
                                 }}
                             >
                                 <i
-                                    className={`dark:text-white-900 fa-solid fa-lg fa-${theme == 0 ? "sun" : "moon"
+                                    className={`dark:text-white-900 fa-solid fa-lg fa-${theme === 0 ? "sun" : "moon"
                                         }`}
                                 ></i>
                             </button>
