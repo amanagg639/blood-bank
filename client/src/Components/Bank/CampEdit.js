@@ -1,19 +1,16 @@
 import React, { useState, useContext } from 'react'
-import RegisterBank from './RegisterBank';
 import AuthContext from '../context/AuthContext'
 import Popup from '../Util/Popup';
 import CampsCheck from './CampsCheck';
 
 const CampEdit = (props) => {
-    const { user } = useContext(AuthContext);
-    const [flag, setFlag] = useState(true);
     const [popup, setPopup] = useState(-1);
     const [sent, setSent] = useState([]);
-    const s1 = "mx-2 px-9 py-2 w-max font-semibold rounded-full shadow-sm text-white-900 bg-blood hover:drop-shadow-md hover:opacity-80 cursor-pointer";
+    
     return (
         <div>
             {
-                props.popup != -1 && <div className="popup h-[150%] overflow-scroll z-10">
+                props.popup !== -1 && <div className="popup h-[150%] overflow-scroll z-10">
                     <div className='popup_inner rounded-lg p-7 overflow-scroll w-fit'>
                         <div>
                             <h1 className='text-2xl font-bold inline-block'>
@@ -25,7 +22,7 @@ const CampEdit = (props) => {
                             {
                                 props.data.donors.map((k, j) => {
                                     return (
-                                        <CampsCheck setSent={setSent} popup={popup} setPopup={setPopup} data={k} camp={props.data._id} />
+                                        <CampsCheck setSent={setSent} popup={popup} setPopup={setPopup} data={k} camp={props.data._id} key={j} />
                                     )
                                 })
                             }
@@ -38,4 +35,4 @@ const CampEdit = (props) => {
     )
 }
 
-export default CampEdit
+export default CampEdit;
