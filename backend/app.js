@@ -29,6 +29,12 @@ app.use("/auth", require("./routers/authRouter"));
 app.use("/user", require("./routers/userRouter"));
 app.use("/bank", require("./routers/bankRouter"));
 app.use("/camps", require("./routers/campRouter"));
+app.get('/',(req, res)=>{
+	res.send({
+		activeStatus:true,
+		error:false,
+	})
+})
 
 const path = require('path');
 __dirname = path.resolve();
