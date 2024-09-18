@@ -40,7 +40,7 @@ const Auth = (props) => {
   }, [type]);
 
   useEffect(() => {
-    if (longitude == 0) return;
+    if (longitude === 0) return;
     mapboxgl.accessToken =
       "pk.eyJ1IjoiY29yb2JvcmkiLCJhIjoiY2s3Y3FyaWx0MDIwbTNpbnc4emxkdndrbiJ9.9KeSiPVeMK0rWvJmTE0lVA";
 
@@ -57,7 +57,7 @@ const Auth = (props) => {
     e.preventDefault();
     
     var formData;
-    if (handle == "bank") {
+    if (handle === "bank") {
       formData = {
         name: name,
         hospital: hospital,
@@ -106,7 +106,7 @@ const Auth = (props) => {
       );
     console.log("getting logged in");
     await getLoggedIn();
-    navigate(`/${handle == "bank" ? handle : "user"}/profile`);
+    navigate(`/${handle === "bank" ? handle : "user"}/profile`);
   };
 
   const logIn = async (e) => {
@@ -120,7 +120,7 @@ const Auth = (props) => {
         .post(`/auth/login/${handle}`, formData, { withCredentials: true })
         .then(async (res) => {});
       await getLoggedIn();
-      navigate(`/${handle == "bank" ? handle : "user"}/profile`);
+      navigate(`/${handle === "bank" ? handle : "user"}/profile`);
     } catch (err) {
       alert(err.response.data.errorMessage);
     }
@@ -344,7 +344,7 @@ const Auth = (props) => {
                           onChange={(e) => setPhone(e.target.value)}
                         />
                       </div>
-                      {handle == "bank" && (
+                      {handle === "bank" && (
                         <div>
                           <label className="font-semibold  leading-8">
                             Email:
@@ -433,7 +433,7 @@ const Auth = (props) => {
                       </div>
                     </div>
 
-                    {handle == "bank" && (
+                    {handle === "bank" && (
                       <>
                         <br />
                         <div>
@@ -525,7 +525,7 @@ const Auth = (props) => {
                 <input
                   type="submit"
                   className={s1 + (auth === 0 && " w-4/12")}
-                  disabled={handle == "bank" && auth == 0 && longitude == 0}
+                  disabled={handle === "bank" && auth === 0 && longitude === 0}
                   value={auth === 0 ? "Sign Up" : "Log In"}
                 />
               </center>
