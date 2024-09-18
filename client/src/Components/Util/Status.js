@@ -3,7 +3,7 @@ import axios from "axios";
 
 const Status = (props) => {
     const [status, setStatus] = useState(props.status);
-    const choices = ['Pending', 'Approved', 'Denied', (props.handle == "donations" ? 'Donated' : "Completed")];
+    const choices = ['Pending', 'Approved', 'Denied', (props.handle === "donations" ? 'Donated' : "Completed")];
     return (
         <div >
             <select name="status" id="status" onChange={async (k) => {
@@ -35,7 +35,7 @@ const Status = (props) => {
                                     alert("Something went wrong");
                                 });
                         }, (e) => {
-                            alert(e.request.status == 404 ? "Not Enough Blood" : "Something went wrong");
+                            alert(e.request.status === 404 ? "Not Enough Blood" : "Something went wrong");
                         });
                 } else {
                     await axios.put(`/bank/${props.handle}`, { id: props.id, status: k.target.value })
@@ -48,8 +48,8 @@ const Status = (props) => {
                         });
                 }
             }}
-                disabled={status == "Denied" || status == "Donated" || status == "Completed"}
-                className={(status == "Pending" ? "border-metal text-metal" : (status == "Approved" ? "border-yellowX text-yellowX " : (status == "Denied" ? "border-red text-red" : "border-green text-green"))) + ' border-2 px-4 py-2 rounded-xl hover:shadow-md cursor-pointer'}
+                disabled={status === "Denied" || status === "Donated" || status === "Completed"}
+                className={(status === "Pending" ? "border-metal text-metal" : (status === "Approved" ? "border-yellowX text-yellowX " : (status === "Denied" ? "border-red text-red" : "border-green text-green"))) + ' border-2 px-4 py-2 rounded-xl hover:shadow-md cursor-pointer'}
             >
                 {
                     choices.map((e) =>
