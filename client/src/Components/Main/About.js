@@ -8,8 +8,8 @@ const About = () => {
       <br /><p className='text-xl'>It includes managing and tracking blood donations, connecting donors with recipients, and providing real-time information on blood shortages and needs. The platform will include both a user-facing interface and an blood bank’s interface for managing the data.</p>
       <p className='text-right text-5xl'>
         <br />
-        <a target="_blank" href="https://github.com/VinaySingla1235" className='hover:drop-shadow-md hover:text-purple'><i class="fa-brands fa-github"></i></a>&nbsp;&nbsp;&nbsp;
-        <a target="_blank" href="https://www.linkedin.com/in/vinay-singla-0a1ab5248/" className='hover:drop-shadow-md hover:text-metal'><i class="fa-brands fa-linkedin"></i> </a>&nbsp;&nbsp;
+        <a target="_blank" href="https://github.com/amanagg639" className='hover:drop-shadow-md hover:text-purple'><i class="fa-brands fa-github"></i></a>&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="https://www.linkedin.com/in/aman-aggarwal-a89a83210/" className='hover:drop-shadow-md hover:text-metal'><i class="fa-brands fa-linkedin"></i> </a>&nbsp;&nbsp;
       </p>
     </div>
   )
