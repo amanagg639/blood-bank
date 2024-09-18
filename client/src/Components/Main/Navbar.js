@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import logo from "../../assets/logo.png";
 import { Outlet, Link } from "react-router-dom";
 import DropDown from "../Util/DropDown";
 import axios from "axios";
