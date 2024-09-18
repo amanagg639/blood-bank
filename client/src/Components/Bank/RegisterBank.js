@@ -49,12 +49,12 @@ const RegisterBank = (props) => {
                         onSubmit={(e) => submit(e)}
                     >
                         <fieldset className="border border-solid border-gray-300 px-8 py-5">
-                            {props.todo == "register" && <legend className="text-2xl font-bold mb-1">
+                            {props.todo === "register" && <legend className="text-2xl font-bold mb-1">
                                 &nbsp;New Blood Donation Camp&nbsp;
                             </legend>}
                             <p></p>
                             <fieldset className="border border-solid border-gray-300 px-7 py-5 pb-7">
-                                {props.todo == "register" && <legend className="text-2xl font-bold">
+                                {props.todo === "register" && <legend className="text-2xl font-bold">
                                     &nbsp;Camp Details&nbsp;
                                 </legend>}
 
@@ -127,7 +127,7 @@ const RegisterBank = (props) => {
                             </fieldset>
                             <br />
                             <fieldset className="border border-solid border-gray-300 px-7 py-5 pb-7">
-                                {props.todo == "register" && <legend className="text-2xl font-bold">
+                                {props.todo === "register" && <legend className="text-2xl font-bold">
                                     &nbsp;Address&nbsp;
                                 </legend>}
 
