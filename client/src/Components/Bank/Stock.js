@@ -3,8 +3,9 @@ import axios from "axios";
 
 const Stock = () => {
     const [data, setData] = useState([]);
+    const API_URL = process.env.REACT_APP_API_URL;
     useEffect(() => {
-        axios.get("/bank/getStock").then((r) => {
+        axios.get(`${API_URL}/bank/getStock`).then((r) => {
             setData(r.data.stock);
         }).catch((err) => { alert("Something went wrong") })
     }, []);
