@@ -30,7 +30,7 @@ const Auth = (props) => {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const { getLoggedIn } = useContext(AuthContext);
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
   const navigate = useNavigate();
   const s1 =
@@ -40,7 +40,7 @@ const Auth = (props) => {
   }, [type]);
 
   useEffect(() => {
-    if (longitude === 0) return;
+    if (longitude == 0) return;
     mapboxgl.accessToken =
       "pk.eyJ1IjoiY29yb2JvcmkiLCJhIjoiY2s3Y3FyaWx0MDIwbTNpbnc4emxkdndrbiJ9.9KeSiPVeMK0rWvJmTE0lVA";
 
@@ -57,7 +57,7 @@ const Auth = (props) => {
     e.preventDefault();
     
     var formData;
-    if (handle === "bank") {
+    if (handle == "bank") {
       formData = {
         name: name,
         hospital: hospital,
@@ -99,14 +99,14 @@ const Auth = (props) => {
     }
     console.log("sending request");
     await axios
-      .post(`/auth/${handle}`, formData, { withCredentials: true })
+      .post(`${API_URL}/auth/${handle}`, formData, { withCredentials: true })
       .then(
           async (res) => {},
         (err) => alert(err.response.data.errorMessage+"this is custom error")
       );
     console.log("getting logged in");
     await getLoggedIn();
-    navigate(`/${handle === "bank" ? handle : "user"}/profile`);
+    navigate(`/${handle == "bank" ? handle : "user"}/profile`);
   };
 
   const logIn = async (e) => {
@@ -117,10 +117,10 @@ const Auth = (props) => {
         password: password,
       };
       await axios
-        .post(`/auth/login/${handle}`, formData, { withCredentials: true })
+        .post(`${API_URL}/auth/login/${handle}`, formData, { withCredentials: true })
         .then(async (res) => {});
       await getLoggedIn();
-      navigate(`/${handle === "bank" ? handle : "user"}/profile`);
+      navigate(`/${handle == "bank" ? handle : "user"}/profile`);
     } catch (err) {
       alert(err.response.data.errorMessage);
     }
@@ -344,7 +344,7 @@ const Auth = (props) => {
                           onChange={(e) => setPhone(e.target.value)}
                         />
                       </div>
-                      {handle === "bank" && (
+                      {handle == "bank" && (
                         <div>
                           <label className="font-semibold  leading-8">
                             Email:
@@ -433,7 +433,7 @@ const Auth = (props) => {
                       </div>
                     </div>
 
-                    {handle === "bank" && (
+                    {handle == "bank" && (
                       <>
                         <br />
                         <div>
@@ -525,7 +525,7 @@ const Auth = (props) => {
                 <input
                   type="submit"
                   className={s1 + (auth === 0 && " w-4/12")}
-                  disabled={handle === "bank" && auth === 0 && longitude === 0}
+                  disabled={handle == "bank" && auth == 0 && longitude == 0}
                   value={auth === 0 ? "Sign Up" : "Log In"}
                 />
               </center>
