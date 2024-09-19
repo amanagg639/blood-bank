@@ -21,33 +21,37 @@ const UserForm = () => {
     const [district, setDistrict] = useState(0);
     const [me, setMe] = useState(false);
     const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+    const API_URL = process.env.REACT_APP_API_URL;
+
     useEffect(() => {
         if (handle === "donate") {
             setMe(true);
         }
-    }, []);
+    }, [handle]);
+
     useEffect(() => {
         setName(me ? user.name : "");
         setBlood(me ? bloodGroups.indexOf(user.bloodGroup) : 0);
-        setAge(me ? user.age : 0)
-        setGender(me ? user.gender : "male")
-    }, [me]);
+        setAge(me ? user.age : 0);
+        setGender(me ? user.gender : "male");
+    }, [me, user, bloodGroups]);
 
-    const donate = () => {
+    const donate = async () => {
         const formData = {
             bankId: bank,
             units: units,
             disease: desc
         };
-        axios.post("/user/donate", formData, { withCredentials: true }).then((r) => {
+        try {
+            await axios.post(`${API_URL}/user/donate`, formData, { withCredentials: true });
             alert("Donation request sent successfully");
             navigate("/user/donations");
-        }).catch((e) => {
+        } catch (e) {
             alert("Something went wrong");
-        });
+        }
     };
 
-    const request = () => {
+    const request = async () => {
         const formData = {
             bankId: bank,
             name: name,
@@ -57,113 +61,152 @@ const UserForm = () => {
             units: units,
             reason: desc
         };
-        axios.post("/user/request", formData, { withCredentials: true }).then((r) => {
+        try {
+            await axios.post(`${API_URL}/user/request`, formData, { withCredentials: true });
             alert("Blood request sent successfully");
             navigate("/user/requests");
-        }).catch((e) => {
+        } catch (e) {
             alert("Something went wrong");
-        });
+        }
     };
 
     return (
-        <div className={`p-6 w-12/12`}>
+        <div className="p-6 w-full">
             <form
                 className="space-y-7"
-                action=""
-                onSubmit={(e) => { e.preventDefault(); if (bank === "") { alert("Select a blood bank"); return; } handle === "donate" ? donate() : request(); }}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    if (bank === "") {
+                        alert("Select a blood bank");
+                        return;
+                    }
+                    handle === "donate" ? donate() : request();
+                }}
             >
                 <fieldset className="border border-solid border-gray-300 p-3">
-                    <legend class="text-2xl font-bold">
-                        &nbsp;{handle === "donate" ? "Donate Blood" : "Make Blood Request"} &nbsp;
+                    <legend className="text-2xl font-bold">
+                        {handle === "donate" ? "Donate Blood" : "Make Blood Request"}
                     </legend>
-                    {handle === "request" && <legend align="right">
-                        <input type="checkbox" id="me" value={me} onChange={(e) => setMe(!me)} />
-                        <label for="me"> For me</label><br />
-                    </legend>}
-                    <p className=""></p>
+                    {handle === "request" && (
+                        <div align="right">
+                            <input type="checkbox" id="me" checked={me} onChange={() => setMe(!me)} />
+                            <label htmlFor="me"> For me</label><br />
+                        </div>
+                    )}
                     <table className="w-full" cellPadding={10}>
-                        <tr>
-                            <td>
-                                <label className="font-semibold leading-8">{handle === "request" && "Patient "}Name:<font color="red">*</font></label>
-                                <input
-                                    className="w-full p-3 text-md border border-silver rounded"
-                                    type="text"
-                                    placeholder="Enter your full name"
-                                    required
-                                    value={name}
-                                    disabled={me || handle === "donate"}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </td>
-                            <td>
-                                <label for="blood" className="font-semibold  leading-8">Blood Group:<font color="red">*</font></label>
-                                <select name="blood"
-                                    onChange={(e) => setBlood(e.target.value)}
-                                    disabled={me || handle === "donate"}
-                                    className="w-full p-3 text-md border border-silver rounded">
-                                    {
-                                        bloodGroups.map((e, i) => <option value={i} selected={blood === i}>{e}</option>)
-                                    }
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            {handle === "request" && <><td>
-                                <label className="font-semibold  leading-8">Age:<font color="red">*</font></label>
-                                <input
-                                    className="w-full p-3 text-md border border-silver rounded"
-                                    type="number"
-                                    placeholder="Enter your age"
-                                    required
-                                    value={age}
-                                    min={1}
-                                    disabled={me}
-                                    onChange={(e) => setAge(e.target.value)}
-                                />
-                            </td><td><label for="gender" className="font-semibold  leading-8">Gender:<font color="red">*</font></label>
-                                    <select name="gender" id="gender" disabled={me} onChange={(e) => setGender(e.target.value)} className="w-full p-3 text-md border border-silver rounded" >
-                                        <option value="male" selected={gender === "male"}>Male</option>
-                                        <option value="female" selected={gender === "female"}>Female</option>
-                                    </select></td></>}
-                        </tr>
-                        <tr>
-
-                        </tr>
-                        <tr><td>
-                            <label className="font-semibold leading-8">Units (in mL):<font color="red">*</font></label>
-                            <input
-                                className="w-full p-3 text-md border border-silver rounded"
-                                type="number"
-                                min={1}
-                                max={350}
-                                required
-                                value={units}
-                                onChange={(e) => setUnits(e.target.value)}
-                            />
-                        </td><td colSpan={2}>
-                                <label for="desc" className="font-semibold  leading-8">{handle === "donate" ? "Disease (if any):" : "Reason:"}</label>
-                                <input
-                                    className="w-full p-3 text-md border border-silver rounded"
-                                    name="desc"
-                                    type="text"
-                                    onChange={(e) => setDesc(e.target.value.trim())}
-                                />
-                            </td></tr>
-                        <tr>
-                            <td><label for="state" className="font-semibold  leading-8">State:<font color="red">*</font></label>
-                                <select name="state" id="state" onChange={(e) => { setState(e.target.value); setDistrict(0); }} className="w-full p-3 text-md border border-silver rounded">
-                                    {
-                                        data.states.map((e, i) => <option value={i} selected={state === i}>{e.state}</option>)
-                                    }
-                                </select>
-                            </td>
-                            <td><label for="district" className="font-semibold  leading-8">District:<font color="red">*</font></label>
-                                <select name="district" id="district" onChange={(e) => { setDistrict(e.target.value); }} className="w-full p-3 text-md border border-silver rounded">
-                                    {
-                                        data.states[state].districts.map((e, i) => <option value={i} selected={district === i}>{e}</option>)
-                                    }
-                                </select></td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label className="font-semibold leading-8">{handle === "request" && "Patient "}Name:<font color="red">*</font></label>
+                                    <input
+                                        className="w-full p-3 text-md border border-silver rounded"
+                                        type="text"
+                                        placeholder="Enter your full name"
+                                        required
+                                        value={name}
+                                        disabled={me || handle === "donate"}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <label htmlFor="blood" className="font-semibold leading-8">Blood Group:<font color="red">*</font></label>
+                                    <select
+                                        name="blood"
+                                        onChange={(e) => setBlood(parseInt(e.target.value, 10))}
+                                        disabled={me || handle === "donate"}
+                                        className="w-full p-3 text-md border border-silver rounded"
+                                    >
+                                        {bloodGroups.map((e, i) => (
+                                            <option key={i} value={i} selected={blood === i}>{e}</option>
+                                        ))}
+                                    </select>
+                                </td>
+                            </tr>
+                            {handle === "request" && (
+                                <>
+                                    <tr>
+                                        <td>
+                                            <label className="font-semibold leading-8">Age:<font color="red">*</font></label>
+                                            <input
+                                                className="w-full p-3 text-md border border-silver rounded"
+                                                type="number"
+                                                placeholder="Enter your age"
+                                                required
+                                                value={age}
+                                                min={1}
+                                                disabled={me}
+                                                onChange={(e) => setAge(parseInt(e.target.value, 10))}
+                                            />
+                                        </td>
+                                        <td>
+                                            <label htmlFor="gender" className="font-semibold leading-8">Gender:<font color="red">*</font></label>
+                                            <select
+                                                name="gender"
+                                                id="gender"
+                                                disabled={me}
+                                                onChange={(e) => setGender(e.target.value)}
+                                                className="w-full p-3 text-md border border-silver rounded"
+                                            >
+                                                <option value="male" selected={gender === "male"}>Male</option>
+                                                <option value="female" selected={gender === "female"}>Female</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </>
+                            )}
+                            <tr>
+                                <td>
+                                    <label className="font-semibold leading-8">Units (in mL):<font color="red">*</font></label>
+                                    <input
+                                        className="w-full p-3 text-md border border-silver rounded"
+                                        type="number"
+                                        min={1}
+                                        max={350}
+                                        required
+                                        value={units}
+                                        onChange={(e) => setUnits(parseInt(e.target.value, 10))}
+                                    />
+                                </td>
+                                <td colSpan={2}>
+                                    <label htmlFor="desc" className="font-semibold leading-8">{handle === "donate" ? "Disease (if any):" : "Reason:"}</label>
+                                    <input
+                                        className="w-full p-3 text-md border border-silver rounded"
+                                        name="desc"
+                                        type="text"
+                                        value={desc}
+                                        onChange={(e) => setDesc(e.target.value.trim())}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="state" className="font-semibold leading-8">State:<font color="red">*</font></label>
+                                    <select
+                                        name="state"
+                                        id="state"
+                                        onChange={(e) => { setState(parseInt(e.target.value, 10)); setDistrict(0); }}
+                                        className="w-full p-3 text-md border border-silver rounded"
+                                    >
+                                        {data.states.map((e, i) => (
+                                            <option key={i} value={i} selected={state === i}>{e.state}</option>
+                                        ))}
+                                    </select>
+                                </td>
+                                <td>
+                                    <label htmlFor="district" className="font-semibold leading-8">District:<font color="red">*</font></label>
+                                    <select
+                                        name="district"
+                                        id="district"
+                                        onChange={(e) => setDistrict(parseInt(e.target.value, 10))}
+                                        className="w-full p-3 text-md border border-silver rounded"
+                                    >
+                                        {data.states[state].districts.map((e, i) => (
+                                            <option key={i} value={i} selected={district === i}>{e}</option>
+                                        ))}
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                     <BanksSearch state={data.states[state].state} district={data.states[state].districts[district]} setBank={setBank} />
                     <button
@@ -178,4 +221,4 @@ const UserForm = () => {
     )
 }
 
-export default UserForm
+export default UserForm;
