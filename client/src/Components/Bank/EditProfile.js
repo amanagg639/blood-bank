@@ -6,7 +6,8 @@ import AuthContext from "../context/AuthContext";
 import mapboxgl from "mapbox-gl";
 
 const EditProfile = () => {
-    const { getLoggedIn, user } = useContext(AuthContext); // Removed 'handle' as it's not used
+    const { handle } = useParams();
+    const { getLoggedIn, user } = useContext(AuthContext);
     const [name, setName] = useState("");
     const [mail, setMail] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +22,7 @@ const EditProfile = () => {
     const [category, setCategory] = useState("Private");
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
-
+    const API_URL = process.env.REACT_APP_API_URL;
     useEffect(() => {
         setName(user.name);
         setHospital(user.hospital);
@@ -40,14 +41,10 @@ const EditProfile = () => {
         setAddress(user.address);
         setLatitude(user.latitude);
         setLongitude(user.longitude);
-    }, [
-        user.name, user.hospital, user.contactPerson, user.category, user.website,
-        user.email, user.phone, user.state, user.district, user.address,
-        user.latitude, user.longitude
-    ]); // Added all dependencies
+    }, []);
 
     useEffect(() => {
-        if (longitude === 0) return; // Changed == to ===
+        if (longitude == 0) return;
         mapboxgl.accessToken = 'pk.eyJ1IjoiY29yb2JvcmkiLCJhIjoiY2s3Y3FyaWx0MDIwbTNpbnc4emxkdndrbiJ9.9KeSiPVeMK0rWvJmTE0lVA';
         var map = new mapboxgl.Map({
             container: 'map', style: 'mapbox://styles/mapbox/streets-v12',
@@ -72,7 +69,7 @@ const EditProfile = () => {
             category: category
         };
 
-        await axios.put(`/bank`, formData)
+        await axios.put(`${API_URL}/bank`, formData)
             .then(async (response) => {
                 setEdit(!edit);
                 await getLoggedIn();
@@ -83,7 +80,7 @@ const EditProfile = () => {
     };
 
     const fetchGeo = async () => {
-        if (latitude === user.latitude && longitude === user.longitude) return; // Changed == to ===
+        if (latitude == user.latitude && longitude == user.longitude) return;
         await navigator.geolocation.getCurrentPosition((p) => {
             setLatitude(p.coords.latitude);
             setLongitude(p.coords.longitude);
@@ -96,6 +93,7 @@ const EditProfile = () => {
             timeout: 5000,
             maximumAge: 0
         });
+
     };
 
     return (
@@ -110,7 +108,7 @@ const EditProfile = () => {
                     <table className="w-full" cellPadding={15}>
                         <tr>
                             <td>
-                                <label className="font-semibold leading-8">Blood Bank Name:<font color="red">*</font></label>
+                                <label className="font-semibold  leading-8">Blood Bank Name:<font color="red">*</font></label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     type="text"
@@ -121,7 +119,7 @@ const EditProfile = () => {
                                 />
                             </td>
                             <td>
-                                <label className="font-semibold leading-8">Parent Hospital Name:<font color="red">*</font></label>
+                                <label className="font-semibold  leading-8">Parent Hospital Name:<font color="red">*</font></label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     type="text"
@@ -131,26 +129,22 @@ const EditProfile = () => {
                                     onChange={(e) => { setHospital(e.target.value) }}
                                 />
                             </td>
-                            <td>    
-                                <label className="font-semibold leading-8">Contact Person:</label>
+                            <td>    <label className="font-semibold  leading-8">Contact Person:</label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     type="text"
                                     value={contactPerson}
                                     disabled={edit}
                                     onChange={(e) => setContactPerson(e.target.value)}
-                                />
-                            </td>
+                                /></td>
                         </tr>
                         <tr>
-                            <td>
-                                <label for="category" className="font-semibold leading-8">Category:<font color="red">*</font></label>
+                            <td><label for="category" className="font-semibold  leading-8">Category:<font color="red">*</font></label>
                                 <select name="category" id="category" value={category} disabled={edit} onChange={(e) => setCategory(e.target.value)} className="w-full p-3 text-md border border-silver rounded" >
                                     <option value="Private">Private</option>
                                     <option value="Govt.">Govt.</option>
                                     <option value="Red Cross">Red Cross</option>
-                                </select>
-                            </td>
+                                </select></td>
 
                             <td>
                                 <label className="font-semibold leading-8">Mobile:<font color="red">*</font></label>
@@ -165,7 +159,7 @@ const EditProfile = () => {
                                 />
                             </td>
                             <td>
-                                <label className="font-semibold leading-8">Password:</label><font color="red">*</font>
+                                <label className="font-semibold  leading-8">Password:</label><font color="red">*</font>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     type="password"
@@ -178,19 +172,15 @@ const EditProfile = () => {
                             </td>
                         </tr>
                         <tr>
+                        </tr>
+                        <tr>
                             <td>
-                                <label className="font-semibold leading-8">Email:</label>
-                                <input
-                                    className="w-full p-3 text-md border border-silver rounded"
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    disabled={edit}
-                                    value={mail}
-                                    onChange={(e) => setMail(e.target.value)}
+                                <label className="font-semibold  leading-8">Email:</label>
+                                <input className="w-full p-3 text-md border border-silver rounded" type="email" placeholder="Enter your email" disabled={edit} value={mail} onChange={(e) => setMail(e.target.value)}
                                 />
                             </td>
                             <td>
-                                <label className="font-semibold leading-8">Website:</label>
+                                <label className="font-semibold  leading-8">Website:</label>
                                 <input
                                     className="w-full p-3 text-md border border-silver rounded"
                                     type="text"
@@ -212,12 +202,11 @@ const EditProfile = () => {
                                     className={`w-44 mt-8 px-7 py-2 bg-blood text-white-900 hover:bg-gray-darkest rounded-full text-lg font-bold align-bottom ${edit && "hidden"}`}
                                 >
                                     Save
-                                </button>
-                            </td>
+                                </button></td>
                         </tr>
                         <tr>
                             <td>
-                                <label for="state" className="font-semibold leading-8">State:<font color="red">*</font></label>
+                                <label for="state" className="font-semibold  leading-8">State:<font color="red">*</font></label>
                                 <select name="state" id="state" disabled={edit} onChange={(e) => { setState(e.target.value); setDistrict(0); }} className="w-full p-3 text-md border border-silver rounded">
                                     {
                                         data.states.map((e, i) => <option value={i} selected={state === i}>{e.state}</option>)
@@ -225,47 +214,67 @@ const EditProfile = () => {
                                 </select>
                             </td>
                             <td>
-                                <label for="district" className="font-semibold leading-8">District:<font color="red">*</font></label>
+                                <label for="district" className="font-semibold  leading-8">District:<font color="red">*</font></label>
                                 <select name="district" id="district" disabled={edit} onChange={(e) => setDistrict(e.target.value)} className="w-full p-3 text-md border border-silver rounded">
                                     {
                                         data.states[state].districts.map((e, i) => <option value={i} selected={district === i}>{e}</option>)
                                     }
                                 </select>
                             </td>
-                            <td>
-                                <label for="address" className="font-semibold leading-8">Address:</label>
+                        </tr>
+                        <tr>
+                            <td colSpan={3}>
+                                <label className="font-semibold  leading-8">Address:</label>
                                 <input
-                                    type="text"
-                                    name="address"
-                                    id="address"
-                                    placeholder="Enter address"
-                                    value={address}
-                                    disabled={edit}
-                                    onChange={(e) => setAddress(e.target.value)}
                                     className="w-full p-3 text-md border border-silver rounded"
+                                    type="text"
+                                    placeholder="Enter your address"
+                                    disabled={edit}
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
                                 />
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan={2}>
-                                <label for="location" className="font-semibold leading-8">Click the button to use your current location:</label><br />
-                                <button
-                                    onClick={() => { fetchGeo(); }}
-                                    type="button"
-                                    className={`px-7 py-2 bg-gray-light text-white-900 hover:bg-gray-darkest rounded-full text-lg font-bold align-bottom ${edit && "hidden"}`}
-                                >
-                                    Fetch Location
-                                </button>
+                            <td colSpan={3}>
+                                <div>
+                                    <label className="font-semibold leading-7">Location:<font color="red">*</font></label></div>
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "1rem" }}>
+                                    <div className="w-full" style={{ gridColumn: "2/4", gridRow: "1/3" }}>
+                                        <div id="map" className="w-full h-[200px]"></div></div>
+                                    <div style={{ gridColumn: "1", gridRow: "1/2" }}>
+                                        <input
+                                            className="w-full p-3 text-md border border-silver rounded"
+                                            type="number"
+                                            step="0.01"
+                                            placeholder="Latitude"
+                                            disabled
+                                            value={latitude}
+                                            onChange={(e) => setLatitude(e.target.value)}
+                                            required
+                                        /><br /><br />
+                                        <input
+                                            className="w-full p-3 text-md border border-silver rounded"
+                                            type="number"
+                                            step="0.01"
+                                            placeholder="Longitude"
+                                            disabled
+                                            value={longitude}
+                                            onChange={(e) => setLongitude(e.target.value)}
+                                            required
+                                        />
+                                        <button type="button" disabled={edit} className="bg-purple text-center text-white-900 rounded-lg mt-4 px-4 py-2" onClick={() => fetchGeo()}>
+                                            Update Geocode
+                                        </button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </table>
                 </form>
             </section>
-            <section>
-                <div id="map" className="h-96"></div>
-            </section>
         </div>
-    );
-};
+    )
+}
 
-export default EditProfile;
+export default EditProfile
