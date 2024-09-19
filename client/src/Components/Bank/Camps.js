@@ -5,8 +5,9 @@ import CampEdit from "./CampEdit";
 const Camps = () => {
     const [data, setData] = useState([]);
     const [popup, setPopup] = useState(-1);
+    const API_URL = process.env.REACT_APP_API_URL;
     useEffect(() => {
-        axios.get("/camps").then((res) => {
+        axios.get(`${API_URL}/camps`).then((res) => {
             setData(res.data);
         }).catch((err) => {
             alert("Something went wrong")
