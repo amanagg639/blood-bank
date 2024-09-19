@@ -13,6 +13,7 @@ const RegisterBank = (props) => {
     const [district, setDistrict] = useState(0);
     const [address, setAddress] = useState("");
     const navigate = useNavigate();
+    const API_URL = process.env.REACT_APP_API_URL;
     const s1 = "mx-2 px-9 py-2 w-4/12 font-semibold rounded-full shadow-sm text-white-900 bg-blood hover:drop-shadow-md hover:opacity-80 cursor-pointer";
     const submit = async (e) => {
         e.preventDefault();
@@ -28,7 +29,7 @@ const RegisterBank = (props) => {
             address: address
         }
         if (props.todo === "register") {
-            await axios.post("/camps", formData, { withCredentials: true }).then((r) => {
+            await axios.post(`${API_URL}/camps`, formData, { withCredentials: true }).then((r) => {
                 alert("Registered New Blood Donation Camp ✅");
                 navigate("/bank/camps");
             }).catch((e) => {
@@ -49,12 +50,12 @@ const RegisterBank = (props) => {
                         onSubmit={(e) => submit(e)}
                     >
                         <fieldset className="border border-solid border-gray-300 px-8 py-5">
-                            {props.todo === "register" && <legend className="text-2xl font-bold mb-1">
+                            {props.todo == "register" && <legend className="text-2xl font-bold mb-1">
                                 &nbsp;New Blood Donation Camp&nbsp;
                             </legend>}
                             <p></p>
                             <fieldset className="border border-solid border-gray-300 px-7 py-5 pb-7">
-                                {props.todo === "register" && <legend className="text-2xl font-bold">
+                                {props.todo == "register" && <legend className="text-2xl font-bold">
                                     &nbsp;Camp Details&nbsp;
                                 </legend>}
 
@@ -127,7 +128,7 @@ const RegisterBank = (props) => {
                             </fieldset>
                             <br />
                             <fieldset className="border border-solid border-gray-300 px-7 py-5 pb-7">
-                                {props.todo === "register" && <legend className="text-2xl font-bold">
+                                {props.todo == "register" && <legend className="text-2xl font-bold">
                                     &nbsp;Address&nbsp;
                                 </legend>}
 
