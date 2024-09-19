@@ -4,14 +4,25 @@ import React, { createContext, useEffect, useState } from "react";
 const AuthContext = createContext();
 
 function AuthContextProvider(props) {
-  const [loggedIn, setLoggedIn] = useState(undefined);
-  const [user, setUser] = useState([]);
+  const [authState, setAuthState] = useState({
+    loggedIn: null,
+    user: null,
+  });
+  const API_URL = process.env.REACT_APP_API_URL;
 
   async function getLoggedIn() {
-    console.log("getting get logged in");
-    const loggedInRes = await axios.get("/auth/loggedIn", { withCredentials: true });
-    setLoggedIn(loggedInRes.data.auth);
-    setUser(loggedInRes.data.user);
+    try {
+      console.log("Fetching authentication status...");
+      const response = await axios.get(`${API_URL}/auth/loggedIn`, { withCredentials: true });
+
+      setAuthState({
+        loggedIn: response.data.auth,
+        user: response.data.user,
+      });
+    } catch (error) {
+      console.error("Failed to fetch authentication status:", error);
+      setAuthState({ loggedIn: false, user: null });
+    }
   }
 
   useEffect(() => {
@@ -19,7 +30,7 @@ function AuthContextProvider(props) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedIn, user, getLoggedIn }}>
+    <AuthContext.Provider value={{ ...authState, getLoggedIn }}>
       {props.children}
     </AuthContext.Provider>
   );
