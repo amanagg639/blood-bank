@@ -7,9 +7,9 @@ const Banks = () => {
     const [state, setState] = useState(0);
     const [district, setDistrict] = useState(0);
     const [filtered, setFiltered] = useState([]);
-
+    const API_URL = process.env.REACT_APP_API_URL;
     useEffect(() => {
-        axios.get(`/bank/allBanks/${data.states[state].state}/${data.states[state].districts[district]}`).then((r) => { setFiltered(r.data); }).catch((e) => alert("Something went wrong"));
+        axios.get(`${API_URL}/bank/allBanks/${data.states[state].state}/${data.states[state].districts[district]}`).then((r) => { setFiltered(r.data); }).catch((e) => alert("Something went wrong"));
     }, [state, district])
 
     return (
